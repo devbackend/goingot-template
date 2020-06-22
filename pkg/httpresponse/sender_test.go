@@ -24,7 +24,6 @@ func TestHTTPResponse_JSON(t *testing.T) {
 	logger.EXPECT().Error(gomock.AssignableToTypeOf(""), gomock.Any()).AnyTimes()
 
 	for _, c := range caseProviderJSON() {
-
 		hr := NewSender(logger)
 
 		w := httptest.NewRecorder()

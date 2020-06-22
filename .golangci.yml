@@ -44,7 +44,7 @@ linters:
     - ineffassign
     - deadcode
     - typecheck
-    - bodyclose
+#    - bodyclose
     - golint
     - stylecheck
     - gosec
