@@ -1,7 +1,7 @@
 stages:
-  - lint
   - test
   - build
+  - deploy
 
 .go-cache:
   before_script:
@@ -12,7 +12,7 @@ stages:
 
 Linters:
   extends: .go-cache
-  stage: lint
+  stage: test
   image: golang:1.14
   script:
     - make lint-install
@@ -51,5 +51,23 @@ build_docker:
     - docker
   only:
     refs:
-      - development
       - master
+      - staging
+
+deploy:
+  stage: deploy
+  image: vandersex/ssh_client:latest
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ./deploy/deploy.sh
+  dependencies:
+    - build_docker
+  tags:
+    - docker
+  only:
+    refs:
+      - master
+      - staging
