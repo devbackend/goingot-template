@@ -1,6 +1,8 @@
 GoIngot
 ==
 
+[![pipeline status](https://gitlab.com/devbackend/goingot/badges/master/pipeline.svg)](https://gitlab.com/devbackend/goingot/-/commits/master)
+
 Scaffolding for Go projects.
 
 Follow go project layout: https://github.com/golang-standards/project-layout
