@@ -27,13 +27,17 @@ var serviceStartCmd = &cobra.Command{
 			log.Fatal("Empty port")
 		}
 
+		start := time.Now()
+
 		router := mux.NewRouter()
 		router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(200)
 
-			resp, _ := json.Marshal(JSONResponse{"Current time: " + time.Now().Format("2006-01-02T15:04:05-0700")})
+			uptime := time.Since(start)
+
+			resp, _ := json.Marshal(JSONResponse{"Uptime: " + uptime.String()})
 			_, err := w.Write(resp)
 			if err != nil {
 				log.Println(err)
