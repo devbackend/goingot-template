@@ -9,7 +9,7 @@ for element in "${addr_array[@]}"; do
   ssh gitlab-runner@"$element" docker rm "$CI_PROJECT_NAME" || echo nothing to remove
   ssh gitlab-runner@"$element" docker run -d \
     --name "$CI_PROJECT_NAME" --net host \
-    -h "\$HOSTNAME" \
+    -e PORT="$PORT" \
     -v /opt/corplimits/config:/opt/corplimits/config:ro \
     --log-opt max-size=2000m --log-opt max-file=3 \
     --restart=always \
