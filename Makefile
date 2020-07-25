@@ -26,7 +26,7 @@ docker-build:
 
 docker-run:
 	make docker-build
-	docker run goingot
+	docker run --env-file=.env goingot
 
 mock-generate:
 	mockgen -source=pkg/logger/logger.go -destination=pkg/logger/logger_mock/mock.go -package=logger_mock Logger
