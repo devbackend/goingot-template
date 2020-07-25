@@ -1,7 +1,7 @@
 GoIngot
 ==
 
-[![pipeline status](https://gitlab.com/devbackend/goingot/badges/master/pipeline.svg)](https://gitlab.com/devbackend/goingot/-/commits/master)
+[![pipeline status](https://gitlab.com/devbackend/goingot/badges/master/pipeline.svg)](https://gitlab.com/devbackend/goingot/-/pipelines)
 
 Scaffolding for Go projects.
 
