@@ -45,8 +45,8 @@ build_docker:
     - docker:18-dind
   script:
     - docker login $CI_REGISTRY -u gitlab-ci-token -p $CI_JOB_TOKEN
-    - docker build -t $IMAGE:$CI_COMMIT_REF_SLUG -f Dockerfile .
-    - docker push $IMAGE:$CI_COMMIT_REF_SLUG
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -f Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   tags:
     - docker
   only:
