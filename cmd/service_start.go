@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
+	"github.com/devbackend/goingot/internal/handler"
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 	"log"
@@ -14,10 +14,6 @@ import (
 	"time"
 )
 
-type JSONResponse struct {
-	Response string `json:"response"`
-}
-
 var serviceStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Run service",
@@ -27,22 +23,10 @@ var serviceStartCmd = &cobra.Command{
 			log.Fatal("Empty port")
 		}
 
-		start := time.Now()
+		handler := handler.UptimeHandler{Start: time.Now()}
 
 		router := mux.NewRouter()
-		router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.WriteHeader(200)
-
-			uptime := time.Since(start)
-
-			resp, _ := json.Marshal(JSONResponse{"Uptime: " + uptime.String()})
-			_, err := w.Write(resp)
-			if err != nil {
-				log.Println(err)
-			}
-		})
+		router.HandleFunc("/", handler.Handle)
 
 		log.Println("Start on port", port)
 
@@ -54,7 +38,7 @@ var serviceStartCmd = &cobra.Command{
 		go func() {
 			err := serv.ListenAndServe()
 			if err != nil {
-				log.Fatal()
+				log.Fatal(err)
 			}
 		}()
 

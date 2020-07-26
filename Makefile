@@ -25,7 +25,6 @@ docker-build:
 	docker build -t goingot -f Dockerfile .
 
 docker-run:
-	make docker-build
 	docker run --env-file=.env goingot
 
 mock-generate:
