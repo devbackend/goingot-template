@@ -29,3 +29,7 @@ docker-run:
 
 mock-generate:
 	mockgen -source=pkg/logger/logger.go -destination=pkg/logger/logger_mock/mock.go -package=logger_mock Logger
+
+prepush-check:
+	make lint
+	make test
