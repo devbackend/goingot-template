@@ -1,14 +1,16 @@
 package handler
 
 import (
-	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/devbackend/goingot/pkg/http/sender"
 )
 
 type UptimeHandler struct {
 	Start time.Time
+	sender.Sender
 }
 
 type jsonResponse struct {
@@ -16,14 +18,5 @@ type jsonResponse struct {
 }
 
 func (h *UptimeHandler) Handle(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
-
-	uptime := time.Since(h.Start)
-
-	resp, _ := json.Marshal(jsonResponse{"Uptime: " + uptime.String()})
-	_, err := w.Write(resp)
-	if err != nil {
-		log.Println(err)
-	}
+	h.SendOK(w, jsonResponse{fmt.Sprintf("Uptime: %s", time.Since(h.Start).String())})
 }
