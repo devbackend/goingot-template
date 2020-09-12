@@ -25,10 +25,7 @@ func WithServiceStart() Command {
 				Use:   "start",
 				Short: "Run service",
 				Run: func(cmd *cobra.Command, args []string) {
-					err := godotenv.Load()
-					if err != nil {
-						log.Fatal(err)
-					}
+					_ = godotenv.Load()
 
 					port := os.Getenv("PORT")
 					if port == "" {
@@ -64,7 +61,7 @@ func WithServiceStart() Command {
 					timeout, cancelFunc := context.WithTimeout(context.Background(), 2*time.Second)
 					defer cancelFunc()
 
-					err = serv.Shutdown(timeout)
+					err := serv.Shutdown(timeout)
 					if err != nil {
 						log.Fatal(err)
 					}
