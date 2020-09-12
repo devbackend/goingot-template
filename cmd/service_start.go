@@ -2,9 +2,6 @@ package cmd
 
 import (
 	"context"
-	"github.com/devbackend/goingot/internal/handler"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cobra"
 	"log"
 	"net"
 	"net/http"
@@ -12,55 +9,69 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
+	"github.com/spf13/cobra"
+
+	"github.com/devbackend/goingot/internal/handler"
 )
 
-var serviceStartCmd = &cobra.Command{
-	Use:   "start",
-	Short: "Run service",
-	Run: func(cmd *cobra.Command, args []string) {
-		port := os.Getenv("PORT")
-		if port == "" {
-			log.Fatal("Empty port")
-		}
+// WithServiceStart return instance of "service start" command
+func WithServiceStart() Command {
+	return func(serviceCmd *cobra.Command) {
+		serviceCmd.AddCommand(
+			&cobra.Command{
+				Use:   "start",
+				Short: "Run service",
+				Run: func(cmd *cobra.Command, args []string) {
+					err := godotenv.Load()
+					if err != nil {
+						log.Fatal(err)
+					}
 
-		handler := handler.UptimeHandler{Start: time.Now()}
+					port := os.Getenv("PORT")
+					if port == "" {
+						log.Fatal("Empty port")
+					}
 
-		router := mux.NewRouter()
-		router.HandleFunc("/", handler.Handle)
+					uptimeHandler := handler.UptimeHandler{Start: time.Now()}
 
-		log.Println("Start on port", port)
+					router := mux.NewRouter()
+					router.HandleFunc("/", uptimeHandler.Handle)
 
-		serv := http.Server{
-			Addr:    net.JoinHostPort("", port),
-			Handler: router,
-		}
+					log.Println("Start on port", port)
 
-		go func() {
-			err := serv.ListenAndServe()
-			if err != nil {
-				log.Fatal(err)
-			}
-		}()
+					serv := http.Server{
+						Addr:    net.JoinHostPort("", port),
+						Handler: router,
+					}
 
-		interrupt := make(chan os.Signal, 1)
-		signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+					go func() {
+						err := serv.ListenAndServe()
+						if err != nil {
+							log.Fatal(err)
+						}
+					}()
 
-		<-interrupt
+					interrupt := make(chan os.Signal, 1)
+					signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
-		log.Println("Stopping...")
+					<-interrupt
 
-		timeout, cancelFunc := context.WithTimeout(context.Background(), 2*time.Second)
-		defer cancelFunc()
+					log.Println("Stopping...")
 
-		err := serv.Shutdown(timeout)
-		if err != nil {
-			log.Fatal(err)
-		}
+					timeout, cancelFunc := context.WithTimeout(context.Background(), 2*time.Second)
+					defer cancelFunc()
 
-		log.Println("Stopped")
-	},
-}
+					err = serv.Shutdown(timeout)
+					if err != nil {
+						log.Fatal(err)
+					}
 
-func init() {
-	serviceCmd.AddCommand(serviceStartCmd)
+					log.Println("Stopped")
+				},
+			},
+		)
+	}
 }
