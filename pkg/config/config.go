@@ -56,8 +56,8 @@ func Load(conf *Config) error {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 
-	err = bindEnvs(conf)
-	if err == nil {
+	err = bindEnvs(*conf)
+	if err != nil {
 		return fmt.Errorf("config.Load: failed bind env conf - %v", err)
 	}
 
