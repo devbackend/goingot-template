@@ -29,8 +29,6 @@ output:
 linters-settings:
   funlen:
     lines: 80
-  golint:
-    min-confidence: 0.9
 
 linters:
   enable:
@@ -44,18 +42,15 @@ linters:
     - ineffassign
     - deadcode
     - typecheck
-#    - bodyclose
-    - golint
+    - revive
     - stylecheck
     - gosec
-    - interfacer
     - unconvert
     - dupl
     - goconst
     - gocyclo
     - gocognit
     - gofmt
-    - maligned
     - depguard
     - misspell
     - lll
@@ -63,12 +58,9 @@ linters:
     - dogsled
     - nakedret
     - prealloc
-    - scopelint
+    - exportloopref
     - gocritic
-#    - gochecknoinits
     - gochecknoglobals
     - godox
     - funlen
     - whitespace
-#    - wsl
-#    - gomnd
