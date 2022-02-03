@@ -68,5 +68,4 @@ deploy:
     - docker
   only:
     refs:
-      - master
-      - staging
+      - deploy
