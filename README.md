@@ -1,4 +1,4 @@
-GoIngot
+GoIngot Template
 ==
 
 [![pipeline status](https://gitlab.com/devbackend/goingot/badges/master/pipeline.svg)](https://gitlab.com/devbackend/goingot/-/pipelines)
