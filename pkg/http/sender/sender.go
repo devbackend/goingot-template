@@ -26,13 +26,14 @@ func (s *Sender) SendJSON(w http.ResponseWriter, status int, data interface{}) {
 	resp, err := marshall(data)
 	if err != nil {
 		s.logger.Error().Msgf("http response json marshaling error - %v", err)
+
 		status = http.StatusInternalServerError
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
-	_, err = w.Write(resp)
-	if err != nil {
+
+	if _, err := w.Write(resp); err != nil {
 		s.logger.Error().Msgf("write http response error - %v", err)
 	}
 }

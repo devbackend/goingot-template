@@ -1,16 +1,22 @@
 module github.com/devbackend/goingot
 
-go 1.14
+go 1.22
 
 require (
-	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
-	github.com/golang/mock v1.4.3
-	github.com/gorilla/mux v1.7.4
-	github.com/joho/godotenv v1.3.0
-	github.com/mitchellh/go-homedir v1.1.0
-	github.com/rs/zerolog v1.19.0
-	github.com/spf13/cobra v1.0.0
-	github.com/spf13/viper v1.4.0
-	github.com/stretchr/testify v1.2.2
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	github.com/gorilla/mux v1.8.1
+	github.com/joho/godotenv v1.5.1
+	github.com/rs/zerolog v1.32.0
+	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.4.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/kr/pretty v0.3.1 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
