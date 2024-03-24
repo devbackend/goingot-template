@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -18,5 +17,5 @@ type jsonResponse struct {
 }
 
 func (h *UptimeHandler) Handle(w http.ResponseWriter, _ *http.Request) {
-	h.SendOK(w, jsonResponse{fmt.Sprintf("Uptime: %s", time.Since(h.Start).String())})
+	h.SendOK(w, jsonResponse{Response: "Uptime: " + time.Since(h.Start).String()})
 }

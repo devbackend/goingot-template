@@ -1,24 +1,18 @@
-FROM golang:alpine
+FROM golang:1.22
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
     GOARCH=amd64
 
-WORKDIR /build
+WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
+COPY go.mod go.sum ./
+
+RUN go mod download && go mod verify
 
 COPY . .
 
-RUN go build -o goingot ./main.go
+RUN go build -o service ./cmd/service/main.go
 
-WORKDIR /app
-
-RUN cp /build/goingot goingot
-
-EXPOSE ${PORT}
-
-CMD ["/app/goingot", "service", "start"]
+CMD ["/app/service"]

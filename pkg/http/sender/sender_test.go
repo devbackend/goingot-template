@@ -7,8 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/devbackend/goingot/pkg/http/sender"
 	"github.com/devbackend/goingot/pkg/log"
@@ -53,8 +54,12 @@ func TestSender_SendJSON(t *testing.T) {
 
 		s.SendJSON(w, c.status, c.data)
 
-		assert.Equal(t, c.expectedStatus, w.Result().StatusCode)
+		res := w.Result()
+
+		assert.Equal(t, c.expectedStatus, res.StatusCode)
 		assert.Equal(t, c.expectedResponse, w.Body.String())
+
+		_ = res.Body.Close()
 	}
 }
 
@@ -64,6 +69,7 @@ func TestSender_SendOK(t *testing.T) {
 		expectedResponse string
 	}{
 		{
+			data:             nil,
 			expectedResponse: "",
 		},
 		{
@@ -83,8 +89,12 @@ func TestSender_SendOK(t *testing.T) {
 
 		s.SendOK(w, c.data)
 
-		assert.Equal(t, http.StatusOK, w.Result().StatusCode)
+		res := w.Result()
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, c.expectedResponse, w.Body.String())
+
+		require.NoError(t, res.Body.Close())
 	}
 }
 
@@ -96,6 +106,7 @@ func TestSender_SendBadRequest(t *testing.T) {
 	}{
 		{
 			reason:           "test reason 1",
+			errors:           nil,
 			expectedResponse: `{"reason":"test reason 1","errors":[]}`,
 		},
 		{
@@ -114,8 +125,12 @@ func TestSender_SendBadRequest(t *testing.T) {
 
 		s.SendBadRequest(w, c.reason, c.errors)
 
-		assert.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
+		res := w.Result()
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 		assert.Equal(t, c.expectedResponse, w.Body.String())
+
+		_ = res.Body.Close()
 	}
 }
 
@@ -132,6 +147,7 @@ func TestSender_SendInternalError(t *testing.T) {
 		},
 		{
 			name:        "NIL error",
+			err:         nil,
 			expectedLog: "",
 		},
 	}
@@ -153,8 +169,12 @@ func TestSender_SendInternalError(t *testing.T) {
 
 			s.SendInternalError(w, c.err)
 
-			assert.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
+			res := w.Result()
+
+			assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
 			assert.Contains(t, buf.String(), c.expectedLog)
+
+			require.NoError(t, res.Body.Close())
 		})
 	}
 }
@@ -167,6 +187,7 @@ func TestSender_SendNotFound(t *testing.T) {
 	}{
 		{
 			name:             "empty reason",
+			reason:           "",
 			expectedResponse: `{"reason":"","errors":null}`,
 		},
 		{
@@ -192,8 +213,12 @@ func TestSender_SendNotFound(t *testing.T) {
 
 			s.SendNotFound(w, c.reason)
 
-			assert.Equal(t, http.StatusNotFound, w.Result().StatusCode)
+			res := w.Result()
+
+			assert.Equal(t, http.StatusNotFound, res.StatusCode)
 			assert.Equal(t, c.expectedResponse, w.Body.String())
+
+			require.NoError(t, res.Body.Close())
 		})
 	}
 }
@@ -224,7 +249,11 @@ func TestSender_SendForbidden(t *testing.T) {
 
 			s.SendForbidden(w)
 
-			assert.Equal(t, http.StatusForbidden, w.Result().StatusCode)
+			res := w.Result()
+
+			assert.Equal(t, http.StatusForbidden, res.StatusCode)
+
+			require.NoError(t, res.Body.Close())
 		})
 	}
 }
@@ -247,6 +276,8 @@ func TestSender_SendNoContent(t *testing.T) {
 		}
 
 		t.Run(c.name, func(t *testing.T) {
+			t.Parallel()
+
 			w := httptest.NewRecorder()
 
 			buf := bytes.Buffer{}
@@ -255,7 +286,11 @@ func TestSender_SendNoContent(t *testing.T) {
 
 			s.SendNoContent(w)
 
-			assert.Equal(t, http.StatusNoContent, w.Result().StatusCode)
+			res := w.Result()
+
+			assert.Equal(t, http.StatusNoContent, res.StatusCode)
+
+			require.NoError(t, res.Body.Close())
 		})
 	}
 }

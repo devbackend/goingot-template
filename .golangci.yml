@@ -1,66 +1,58 @@
-# This file contains all available configuration options
-# with their default values.
-
-# options for analysis running
 run:
-  # default concurrency is a available CPU number
-  concurrency: 4
+  go: '1.22'
 
-  # timeout for analysis, e.g. 30s, 5m, default is 1m
-  timeout: 1m
-
-  # exit code when at least one issue was found, default is 1
-  issues-exit-code: 1
-
-  # include test files or not, default is true
-  tests: true
-
-# output configuration options
-output:
-  # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
-  format: colored-line-number
-
-  # print lines of code with issue, default is true
-  print-issued-lines: true
-
-  # print linter name in the end of issue text, default is true
-  print-linter-name: true
-
-linters-settings:
-  funlen:
-    lines: 80
-
+# https://golangci-lint.run/usage/linters/
 linters:
   enable:
-    - govet
-    - errcheck
-    - staticcheck
-    - unused
-    - gosimple
-    - structcheck
-    - varcheck
-    - ineffassign
-    - deadcode
-    - typecheck
-    - revive
-    - stylecheck
-    - gosec
-    - unconvert
+    - bodyclose
+    - decorder
     - dupl
+    - errcheck
+    - errname
+    - errorlint
+    - exhaustive
+    - exhaustruct
+    - forcetypeassert
+    - gci
     - goconst
-    - gocyclo
-    - gocognit
-    - gofmt
-    - depguard
-    - misspell
-    - lll
-    - unparam
-    - dogsled
-    - nakedret
+    - gofumpt
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - ireturn
+    - maintidx
+    - makezero
+    - nilerr
+    - nilnil
+    - nlreturn
+    - perfsprint
     - prealloc
-    - exportloopref
-    - gocritic
-    - gochecknoglobals
-    - godox
-    - funlen
+    - predeclared
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - tagalign
+    - testifylint
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - wastedassign
     - whitespace
+    - wrapcheck
+    - wsl
+
+linters-settings:
+  gci:
+    sections:
+      - standard
+      - blank
+      - default
+      - blank
+      - prefix(github.com/devbackend/goingot) # Don't forget change this line for your mod name
+  nlreturn:
+    block-size: 2
+  exhaustruct:
+    exclude:
+      - '.+/pkg/http/sender\.ErrorResponse'
